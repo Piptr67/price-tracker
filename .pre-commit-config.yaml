@@ -19,4 +19,5 @@ repos:
       - id: mypy
         additional_dependencies:
           - httpx
+          - pydantic
           - types-beautifulsoup4
