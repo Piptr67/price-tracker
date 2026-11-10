@@ -69,7 +69,7 @@ class BaseScraper(ABC):
         status = response.status_code
 
         if response.is_success:
-            return BeautifulSoup(response.text, "lxml")
+            return BeautifulSoup(response.content, "lxml")
         if status in (404, 410):
             raise ScraperNotFound(url)
         if status == 429:
