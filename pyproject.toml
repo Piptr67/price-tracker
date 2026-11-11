@@ -38,6 +38,7 @@ line-length = 88
 select = ["E", "F", "I"]
 
 [tool.mypy]
+mypy_path = "src"
 plugins = ["pydantic.mypy"]
 strict = true
 

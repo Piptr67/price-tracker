@@ -44,7 +44,7 @@ async def test_wait_over_cap_raises_instead_of_sleeping(
         async with limiter.slot(URL):
             pass
 
-    assert exc_info.value.retry_after == 120
+    assert exc_info.value.retry_after == 120.0
     assert sleeps == []
 
 
