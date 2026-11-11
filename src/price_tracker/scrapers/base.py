@@ -83,11 +83,11 @@ class BaseScraper(ABC):
         raise ScraperError(url, f"Unexpected status {status} at {url}")
 
     @staticmethod
-    def _parse_retry_after(value: str | None) -> int | None:
+    def _parse_retry_after(value: str | None) -> float | None:
         if value is None:
             return None
         try:
-            return int(value)
+            return float(value)
         except ValueError:
             return None
 

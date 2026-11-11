@@ -30,7 +30,7 @@ class RateLimiter:
             wait = self._ready_at - time.monotonic()
 
             if wait > self._max_wait:
-                raise ScraperRateLimit(url, retry_after=int(wait))
+                raise ScraperRateLimit(url, retry_after=wait)
 
             if wait > 0:
                 await asyncio.sleep(wait)
