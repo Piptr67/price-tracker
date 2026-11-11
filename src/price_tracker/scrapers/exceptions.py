@@ -28,7 +28,7 @@ class ScraperRateLimit(ScraperError):
     """Raised on 429 Too Many Requests."""
 
     def __init__(
-        self, url: str, message: str | None = None, retry_after: int | None = None
+        self, url: str, message: str | None = None, retry_after: float | None = None
     ):
         self.retry_after = retry_after
         super().__init__(url, message)

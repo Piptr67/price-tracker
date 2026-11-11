@@ -21,3 +21,4 @@ repos:
           - httpx
           - pydantic
           - types-beautifulsoup4
+          - pytest
