@@ -45,6 +45,7 @@ select = ["E", "F", "I"]
 mypy_path = "src"
 plugins = ["pydantic.mypy"]
 strict = true
+exclude = ["migrations/"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
