@@ -37,9 +37,11 @@ class BaseScraper(ABC):
     min_delay: float = 2.0
     jitter: float = 1.0
 
+    @property
+    @abstractmethod
+    def store(self) -> str: ...
+
     def __init__(self) -> None:
-        if not getattr(type(self), "store", None):
-            raise TypeError(f"{type(self).__name__} must define a `store`")
         self._client: httpx.AsyncClient | None = None
         self._limiter = RateLimiter(self.min_delay, self.jitter)
 
