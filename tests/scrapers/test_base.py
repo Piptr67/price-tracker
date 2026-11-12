@@ -18,6 +18,7 @@ URL = "https://shop.example/product"
 
 
 class DummyScraper(BaseScraper):
+    store = "dummy"
     min_delay = 0.0
     jitter = 0.0
 
@@ -140,3 +141,12 @@ async def test_not_found_hook_raises(respx_mock: respx.MockRouter) -> None:
     async with MissingProductScraper() as scraper:
         with pytest.raises(ScraperNotFound):
             await scraper.fetch(URL)
+
+
+def test_scraper_without_store_cannot_be_created() -> None:
+    class NoStore(BaseScraper):
+        async def scrape(self, url: str) -> ProductData:
+            raise NotImplementedError
+
+    with pytest.raises(TypeError, match="store"):
+        NoStore()
