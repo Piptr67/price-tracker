@@ -69,6 +69,8 @@ class BaseScraper(ABC):
         status = response.status_code
 
         if response.is_success:
+            if self._is_not_found(response):
+                raise ScraperNotFound(url)
             return BeautifulSoup(response.content, "lxml")
         if status in (404, 410):
             raise ScraperNotFound(url)
@@ -96,6 +98,10 @@ class BaseScraper(ABC):
         cooldown = DEFAULT_COOLDOWN if retry_after is None else retry_after
         self._limiter.penalize(cooldown)
         raise ScraperRateLimit(url, retry_after=retry_after)
+
+    def _is_not_found(self, response: httpx.Response) -> bool:
+        """Hook for sites that signal a missing product with a redirect or a 200."""
+        return False
 
     @abstractmethod
     async def scrape(self, url: str) -> ProductData: ...

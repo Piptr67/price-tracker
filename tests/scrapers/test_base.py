@@ -25,6 +25,11 @@ class DummyScraper(BaseScraper):
         raise NotImplementedError
 
 
+class MissingProductScraper(DummyScraper):
+    def _is_not_found(self, response: httpx.Response) -> bool:
+        return True
+
+
 async def test_fetch_returns_parsed_html(respx_mock: respx.MockRouter) -> None:
     respx_mock.get(URL).respond(200, text="<html><title>Shop</title></html>")
 
@@ -127,3 +132,11 @@ async def test_429_delays_next_request(
         await scraper.fetch(URL)
 
     assert sleeps == [30.0]
+
+
+async def test_not_found_hook_raises(respx_mock: respx.MockRouter) -> None:
+    respx_mock.get(URL).respond(200, text="<html></html>")
+
+    async with MissingProductScraper() as scraper:
+        with pytest.raises(ScraperNotFound):
+            await scraper.fetch(URL)
