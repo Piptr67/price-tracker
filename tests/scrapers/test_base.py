@@ -18,6 +18,7 @@ URL = "https://shop.example/product"
 
 
 class DummyScraper(BaseScraper):
+    store = "dummy"
     min_delay = 0.0
     jitter = 0.0
 

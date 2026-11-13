@@ -12,6 +12,7 @@ from price_tracker.scrapers.exceptions import ScraperParseError
 
 
 class CosibellaScraper(BaseScraper):
+    store = "cosibella"
     headers = {**BaseScraper.headers, "Accept-Language": "pl-PL,pl;q=0.9"}
     min_delay = 5.0
     jitter = 1.5

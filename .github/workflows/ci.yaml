@@ -11,6 +11,24 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: price_tracker
+          POSTGRES_PASSWORD: price_tracker
+          POSTGRES_DB: price_tracker
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U price_tracker"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql+asyncpg://price_tracker:price_tracker@localhost:5432/price_tracker
+
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v7
