@@ -40,9 +40,7 @@ def test_database_url() -> str:
     config.set_main_option("script_location", str(ROOT / "migrations"))
     with pytest.MonkeyPatch.context() as patch:
         patch.setenv("DATABASE_URL", test_url)
-        get_settings.cache_clear()
         command.upgrade(config, "head")
-    get_settings.cache_clear()
     return test_url
 
 
