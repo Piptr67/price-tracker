@@ -27,13 +27,26 @@ class Base(DeclarativeBase):
 
 
 class Product(Base):
+    """Real-world product"""
+
     __tablename__ = "products"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    url: Mapped[str] = mapped_column(unique=True)
-    store: Mapped[str]
     name: Mapped[str]
     brand: Mapped[str]
+
+
+class Listing(Base):
+    """Product on store's page"""
+
+    __tablename__ = "listings"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    product_id: Mapped[int] = mapped_column(
+        ForeignKey("products.id", ondelete="CASCADE"), index=True
+    )
+    store: Mapped[str]
+    url: Mapped[str] = mapped_column(unique=True)
     active: Mapped[bool] = mapped_column(server_default=true())
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
@@ -41,15 +54,16 @@ class Product(Base):
 
 
 class PriceSnapshot(Base):
-    __tablename__ = "price_history"
+    """Price check for a listing"""
 
+    __tablename__ = "price_history"
     __table_args__ = (
-        Index("ix_price_history_product_checked", "product_id", "checked_at"),
+        Index("ix_price_history_listing_checked", "listing_id", "checked_at"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    product_id: Mapped[int] = mapped_column(
-        ForeignKey("products.id", ondelete="CASCADE")
+    listing_id: Mapped[int] = mapped_column(
+        ForeignKey("listings.id", ondelete="CASCADE")
     )
     price: Mapped[Decimal] = mapped_column(Numeric(12, 2))
     currency: Mapped[str] = mapped_column(String(3))
