@@ -23,12 +23,12 @@ async def test_requests_are_spaced(limiter: RateLimiter, sleeps: list[float]) ->
     assert sleeps == [2.0]
 
 
-async def test_penalty_delays_next_request(
+async def test_delay_postpones_next_request(
     limiter: RateLimiter, sleeps: list[float]
 ) -> None:
     async with limiter.slot(URL):
         pass
-    limiter.penalize(30.0)
+    limiter.delay_next(30.0)
     async with limiter.slot(URL):
         pass
 
@@ -38,7 +38,7 @@ async def test_penalty_delays_next_request(
 async def test_wait_over_cap_raises_instead_of_sleeping(
     limiter: RateLimiter, sleeps: list[float]
 ) -> None:
-    limiter.penalize(120.0)
+    limiter.delay_next(120.0)
 
     with pytest.raises(ScraperRateLimit) as exc_info:
         async with limiter.slot(URL):

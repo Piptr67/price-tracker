@@ -13,6 +13,8 @@ from price_tracker.scrapers.exceptions import ScraperParseError
 
 class CosibellaScraper(BaseScraper):
     store = "cosibella"
+    ships_from_eu = True
+    price_includes_vat = True
     headers = {**BaseScraper.headers, "Accept-Language": "pl-PL,pl;q=0.9"}
     min_delay = 5.0
     jitter = 1.5
@@ -30,8 +32,8 @@ class CosibellaScraper(BaseScraper):
                 currency=offer["priceCurrency"],
                 in_stock=offer["availability"].endswith("/InStock"),
                 url=url,
-                ships_from_eu=True,
-                price_includes_vat=True,
+                ships_from_eu=self.ships_from_eu,
+                price_includes_vat=self.price_includes_vat,
             )
         except (
             KeyError,

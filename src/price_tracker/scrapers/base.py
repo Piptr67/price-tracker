@@ -36,6 +36,8 @@ class BaseScraper(ABC):
     timeout: httpx.Timeout | float = httpx.Timeout(10.0)
     min_delay: float = 2.0
     jitter: float = 1.0
+    ships_from_eu: bool | None = None
+    price_includes_vat: bool | None = None
 
     @property
     @abstractmethod
@@ -89,18 +91,18 @@ class BaseScraper(ABC):
         raise ScraperError(url, f"Unexpected status {status} at {url}")
 
     @staticmethod
-    def _parse_retry_after(value: str | None) -> float | None:
+    def _parse_retry_after(value: str | None) -> int | None:
         if value is None:
             return None
         try:
-            return float(value)
+            return int(value)
         except ValueError:
             return None
 
     def _raise_rate_limited(self, url: str, response: httpx.Response) -> NoReturn:
         retry_after = self._parse_retry_after(response.headers.get("retry-after"))
         cooldown = DEFAULT_COOLDOWN if retry_after is None else retry_after
-        self._limiter.penalize(cooldown)
+        self._limiter.delay_next(cooldown)
         raise ScraperRateLimit(url, retry_after=retry_after)
 
     def _is_not_found(self, response: httpx.Response) -> bool:
