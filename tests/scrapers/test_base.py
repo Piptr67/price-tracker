@@ -101,7 +101,7 @@ async def test_network_errors_map_to_exception(
 async def test_retry_after_is_parsed(
     respx_mock: respx.MockRouter,
     headers: dict[str, str],
-    expected: int | None,
+    expected: float | None,
 ) -> None:
     respx_mock.get(URL).respond(429, headers=headers)
 
