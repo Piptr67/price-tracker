@@ -16,7 +16,7 @@ URL = "https://shop.example/product"
 async def make_listing(
     session: AsyncSession, url: str = URL, store: str = "Product"
 ) -> Listing:
-    product = await repository.add_product(session, "Product", "Brand")
+    product = await repository.add_product(session, brand="Brand", name="Product")
     return await repository.add_listing(session, product.id, store, url)
 
 
@@ -43,7 +43,7 @@ def snapshot(listing_id: int, price: str, checked_at: datetime) -> PriceSnapshot
 
 
 async def test_add_product_and_listing(session: AsyncSession) -> None:
-    product = await repository.add_product(session, "Product", "Brand")
+    product = await repository.add_product(session, brand="Brand", name="Product")
     listing = await repository.add_listing(session, product.id, "shop", URL)
 
     assert listing.product_id == product.id
@@ -52,7 +52,7 @@ async def test_add_product_and_listing(session: AsyncSession) -> None:
 
 
 async def test_duplicate_url_is_rejected(session: AsyncSession) -> None:
-    product = await repository.add_product(session, "Product", "Brand")
+    product = await repository.add_product(session, brand="Brand", name="Product")
     await repository.add_listing(session, product.id, "shop", URL)
 
     with pytest.raises(IntegrityError):

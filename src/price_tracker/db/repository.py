@@ -1,4 +1,5 @@
 from datetime import datetime
+from decimal import Decimal
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,8 +8,17 @@ from price_tracker.db.models import Listing, PriceSnapshot, Product
 from price_tracker.models.product import ProductData
 
 
-async def add_product(session: AsyncSession, name: str, brand: str) -> Product:
-    product = Product(name=name, brand=brand)
+async def add_product(
+    session: AsyncSession,
+    *,
+    brand: str,
+    name: str,
+    size_amount: Decimal | None = None,
+    size_unit: str | None = None,
+) -> Product:
+    product = Product(
+        brand=brand, name=name, size_amount=size_amount, size_unit=size_unit
+    )
     session.add(product)
     await session.flush()
     return product

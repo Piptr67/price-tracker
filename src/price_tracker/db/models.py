@@ -2,6 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 
 from sqlalchemy import (
+    CheckConstraint,
     DateTime,
     ForeignKey,
     Index,
@@ -30,10 +31,18 @@ class Product(Base):
     """Real-world product"""
 
     __tablename__ = "products"
+    __table_args__ = (
+        CheckConstraint(
+            "(size_amount IS NULL) = (size_unit IS NULL)", name="size_pair"
+        ),
+        CheckConstraint("size_amount > 0", name="size_positive"),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str]
     brand: Mapped[str]
+    name: Mapped[str]
+    size_amount: Mapped[Decimal | None] = mapped_column(Numeric(8, 2))
+    size_unit: Mapped[str | None]
 
 
 class Listing(Base):
