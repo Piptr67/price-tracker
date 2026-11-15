@@ -29,7 +29,7 @@ async def _recreate_database(admin_url: str) -> None:
 
 
 @pytest.fixture(scope="session")
-def test_database_url() -> str:
+def database_url() -> str:
     base = make_url(get_settings().database_url)
     admin_url = base.set(database="postgres").render_as_string(hide_password=False)
     test_url = base.set(database=TEST_DB).render_as_string(hide_password=False)
