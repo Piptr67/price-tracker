@@ -45,8 +45,8 @@ def database_url() -> str:
 
 
 @pytest.fixture
-async def session(test_database_url: str) -> AsyncIterator[AsyncSession]:
-    engine = make_engine(test_database_url)
+async def session(database_url: str) -> AsyncIterator[AsyncSession]:
+    engine = make_engine(database_url)
     async with engine.connect() as conn:
         outer = await conn.begin()
         factory = async_sessionmaker(
