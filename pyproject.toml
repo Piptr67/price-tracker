@@ -19,7 +19,7 @@ dependencies = [
 ]
 
 [project.scripts]
-price-tracker = "price_tracker:main"
+price-tracker = "price_tracker.runner:main"
 
 [build-system]
 requires = ["uv_build>=0.12.15,<0.13.0"]
