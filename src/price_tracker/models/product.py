@@ -10,5 +10,5 @@ class ProductData(BaseModel):
     currency: str
     in_stock: bool
     url: str
-    ships_from_eu: bool | None = None
+    import_fee_due: bool | None = None
     price_includes_vat: bool | None = None

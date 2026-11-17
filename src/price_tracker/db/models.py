@@ -77,7 +77,7 @@ class PriceSnapshot(Base):
     price: Mapped[Decimal] = mapped_column(Numeric(12, 2))
     currency: Mapped[str] = mapped_column(String(3))
     in_stock: Mapped[bool]
-    ships_from_eu: Mapped[bool | None]
+    import_fee_due: Mapped[bool | None]
     price_includes_vat: Mapped[bool | None]
     checked_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()

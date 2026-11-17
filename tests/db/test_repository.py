@@ -74,7 +74,7 @@ async def test_record_snapshot_stores_every_field(session: AsyncSession) -> None
     data = make_data(
         price=Decimal("76.50"),
         in_stock=False,
-        ships_from_eu=True,
+        import_fee_due=False,
         price_includes_vat=None,
     )
 
@@ -85,7 +85,7 @@ async def test_record_snapshot_stores_every_field(session: AsyncSession) -> None
     assert saved.price == Decimal("76.50")
     assert saved.currency == "PLN"
     assert saved.in_stock is False
-    assert saved.ships_from_eu is True
+    assert saved.import_fee_due is False
     assert saved.price_includes_vat is None
     assert saved.checked_at.tzinfo is not None
 
