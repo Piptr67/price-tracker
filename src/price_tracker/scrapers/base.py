@@ -36,7 +36,7 @@ class BaseScraper(ABC):
     timeout: httpx.Timeout | float = httpx.Timeout(10.0)
     min_delay: float = 2.0
     jitter: float = 1.0
-    ships_from_eu: bool | None = None
+    import_fee_due: bool | None = None
     price_includes_vat: bool | None = None
 
     @property

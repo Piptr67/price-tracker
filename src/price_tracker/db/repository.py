@@ -46,7 +46,7 @@ async def record_snapshot(
         price=data.price,
         currency=data.currency,
         in_stock=data.in_stock,
-        ships_from_eu=data.ships_from_eu,
+        import_fee_due=data.import_fee_due,
         price_includes_vat=data.price_includes_vat,
     )
     session.add(snapshot)

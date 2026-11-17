@@ -35,7 +35,7 @@ async def test_scrape_parses_product(respx_mock: respx.MockRouter) -> None:
     assert product.currency == "PLN"
     assert product.in_stock is True
     assert product.url == URL
-    assert product.ships_from_eu is True
+    assert product.import_fee_due is False
     assert product.price_includes_vat is True
 
 
