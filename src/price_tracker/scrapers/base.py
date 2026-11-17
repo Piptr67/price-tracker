@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import NoReturn, Self
+from typing import Any, NoReturn, Self
 
 import httpx
 from bs4 import BeautifulSoup
@@ -59,6 +59,10 @@ class BaseScraper(ABC):
             self._client = None
 
     async def fetch(self, url: str) -> BeautifulSoup:
+        response = await self._request("GET", url)
+        return BeautifulSoup(response.content, "lxml")
+
+    async def _request(self, method: str, url: str, **kwargs: Any) -> httpx.Response:
         if self._client is None:
             raise RuntimeError(
                 f"Scraper must be used as an async context manager. Cannot fetch {url}."
@@ -66,7 +70,7 @@ class BaseScraper(ABC):
 
         async with self._limiter.slot(url):
             try:
-                response = await self._client.get(url)
+                response = await self._client.request(method, url, **kwargs)
             except httpx.TimeoutException as e:
                 raise ScraperTimeout(url) from e
             except httpx.RequestError as e:
@@ -77,7 +81,7 @@ class BaseScraper(ABC):
         if response.is_success:
             if self._is_not_found(response):
                 raise ScraperNotFound(url)
-            return BeautifulSoup(response.content, "lxml")
+            return response
         if status in (404, 410):
             raise ScraperNotFound(url)
         if status == 429:
