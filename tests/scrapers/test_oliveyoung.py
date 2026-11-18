@@ -35,7 +35,7 @@ async def test_scrape_parses_product(respx_mock: respx.MockRouter) -> None:
     assert product.currency == "USD"
     assert product.in_stock is True
     assert product.url == URL
-    assert product.import_fee_due is False
+    assert product.import_fee_due is True
     assert product.price_includes_vat is False
 
 
@@ -76,16 +76,17 @@ async def test_missing_product_raises_not_found(respx_mock: respx.MockRouter) ->
             await scraper.scrape(URL)
 
 
-async def test_body_that_is_not_json_raises(respx_mock: respx.MockRouter) -> None:
-    respx_mock.post(API_URL).respond(200, text="<html>nothing here</html>")
-
-    async with OliveYoungScraper() as scraper:
-        with pytest.raises(ScraperParseError):
-            await scraper.scrape(URL)
-
-
-async def test_json_that_is_not_an_object_raises(respx_mock: respx.MockRouter) -> None:
-    respx_mock.post(API_URL).respond(200, json=[])
+@pytest.mark.parametrize(
+    "body",
+    [
+        pytest.param(b"<html>nothing here</html>", id="not-json"),
+        pytest.param(b"[]", id="not-an-object"),
+    ],
+)
+async def test_unusable_response_body_raises(
+    respx_mock: respx.MockRouter, body: bytes
+) -> None:
+    respx_mock.post(API_URL).respond(200, content=body)
 
     async with OliveYoungScraper() as scraper:
         with pytest.raises(ScraperParseError):
